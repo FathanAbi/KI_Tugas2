@@ -1,17 +1,3 @@
-# Playfair Cipher
-# Playfair Key Matrix
-# Polyalphabetic Ciphers
-# Vigenère Cipher
-# Autokey Cipher
-# Transposition Ciphers
-# Rail Fence cipher
-# Row Transposition Ciphers
-# Product Ciphers
-# Modern Block Ciphers
-# Modern Stream Ciphers
-# Ideal Block Cipher
-# Claude Shannon and Substitution Permutation Ciphers
-# Feistel Cipher
 # Data Encryption Standard (DES)
 
 def text_to_bin(s):
@@ -213,6 +199,27 @@ def cbc_process(text, key, iv, mode="encrypt"):
             previous_cipher_block = encrypted_block         
     return ''.join(processed_blocks)
 
+def cfb_process(text, key, iv, mode="encrypt"):
+    text, round_key = preprocess(text, key, mode)
+
+    blocks = [text[i:i+16] for i in range(0, len(text), 16)]
+    processed_blocks = []
+
+    previous_cipher_block = text_to_bin(iv)
+    if mode == "decrypt":
+        for block in blocks:
+            encrypted_iv = des_process(bin_to_hex(previous_cipher_block), round_key, mode="encrypt")
+            xor_block = xor(encrypted_iv, hex_to_bin(block)) 
+            processed_blocks.append(xor_block)
+            previous_cipher_block = hex_to_bin(block) 
+    else:
+        for block in blocks:
+            encrypted_iv = des_process(bin_to_hex(previous_cipher_block), round_key, mode="encrypt")
+            xor_block = xor(encrypted_iv, hex_to_bin(block)) 
+            processed_blocks.append(xor_block)
+            previous_cipher_block = xor_block
+    return ''.join(processed_blocks)
+
 def preprocess(text, key, mode):
     key = permute(text_to_bin(key), key_permutation_table_pc1 , 56)
     left = key[:28]
@@ -244,7 +251,8 @@ if __name__ == '__main__':
             print("\n--- Mode Enkripsi ---")
             print("> 1. Electronic Code Book (ECB)")
             print("> 2. Cipher Block Chaining (CBC)")
-            encryption_mode = int(input(">> Pilih opsi enkripsi(1/2): "))
+            print("> 3. Cipher FeedBack (CFB)")
+            encryption_mode = int(input(">> Pilih opsi enkripsi(1/2/3): "))
             if encryption_mode == 1:
                 if mode == 1:
                     cipher_text = ecb_process(text, key, mode="encrypt")
@@ -263,6 +271,17 @@ if __name__ == '__main__':
                 else:
                     decrypted_text = cbc_process(text, key, iv, mode="decrypt")
                     print(f">> CBC >> Teks Terdekripsi: {bin_to_text(decrypted_text)} << CBC {decrypted_text}")
+            elif encryption_mode == 3:
+                iv = input(">> Masukkan initial vector (8 karakter): ")
+                if len(iv) != 8:
+                    print(">> Panjang initial vector tidak valid. Silakan masukkan 8 karakter.")
+                    continue
+                if mode == 1:
+                    cipher_text = cfb_process(text, key, iv, mode="encrypt")
+                    print(f">> CFB >> Teks Cipher (hex): {bin_to_hex(cipher_text)} << CFB {cipher_text}")
+                else:
+                    decrypted_text = cfb_process(text, key, iv, mode="decrypt")
+                    print(f">> CFB >> Teks Terdekripsi: {bin_to_text(decrypted_text)} << CFB {decrypted_text}")
             else:
                 print("> Opsi tidak valid, silakan coba lagi.")
         elif mode == 3:

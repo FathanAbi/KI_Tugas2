@@ -15,8 +15,8 @@ def start_server():
         print(f"Got a connection from {addr}")
 
         while True:
-            csu.handle_from_server_connection(client_socket)
-            csu.handle_to_client_connection(client_socket)
+            csu.handle_from_other_connection(client_socket)
+            csu.handle_to_another_connection(client_socket)
 
     except KeyboardInterrupt:
         print("Server shutting down.")

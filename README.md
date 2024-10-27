@@ -14,3 +14,5 @@ Buat program awal (server.py dan client.py)
 * implementasi socket (tranfer data antar socket berbentuk binary string)
 
 ### Fihriz Ilham Rabbany
+* Implementasi Cipher Block Chaining (CBC) dan Cipher FeedBack (CFB) pada DES.
+* Memastikan server dan client dapat saling mengirim pesan.
