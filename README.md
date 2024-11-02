@@ -15,5 +15,5 @@ Buat program awal (server.py dan client.py)
 * fix padding issue
 
 ### Fihriz Ilham Rabbany
-* Implementasi Cipher Block Chaining (CBC) dan Cipher FeedBack (CFB) pada DES.
+* Implementasi Cipher FeedBack (CFB) pada DES tugas pertama saya (sudah implementasi Electronic Code Book (ECB) dan Cipher Block Chaining (CBC) pada tugas pertama).
 * Memastikan server dan client dapat saling mengirim pesan.
